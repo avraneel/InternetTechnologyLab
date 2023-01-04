@@ -3,6 +3,11 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+/*
+ * TODO: 
+ * - use ArrayList data to store for multiple users
+ */
+
 public class Server {
     static protected Map<String, String> map;
     static protected List<Map<String,String>> data;
