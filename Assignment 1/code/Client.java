@@ -28,7 +28,12 @@ public class Client {
 
             System.out.print("[USER " + ob.clientSocket.getLocalPort()+"] Enter command: ");
             x = br.readLine();
+            if(x.equals("q")) {
+                ob.sendToServer("q");
+                break;
+            }
         }
+        ob.closeClient();
     }
 
     void createClient(String hostname, int portNo) throws IOException {
@@ -70,8 +75,8 @@ public class Client {
             if(recvFromServer().equals("authsucess")) {
                 System.out.println("--MANAGER ACCESS GRANTED---");
                 do {
-                    System.out.println("Welcome manager. What do you want to do?\n1. Display all user data.\n2. Modify value for a user's key."
-                                            +"\n0. to break");
+                    System.out.println("\nWelcome manager. What do you want to do?\n1. Display all user data.\n2. Modify value for a user's key."
+                                            +"\n0. to break\n");
                     String ch = br.readLine();
                     sendToServer(ch);
                     if(ch.equals("0")) break;

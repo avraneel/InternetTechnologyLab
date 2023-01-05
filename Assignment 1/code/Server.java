@@ -15,12 +15,17 @@ public class Server {
         ServerSocket serverSocket = new ServerSocket(8080);
 
         while(true) {
-        System.out.println("[LISTENING] Server is listening...");
-        Socket connectionSocket = serverSocket.accept(); 
-        new Thread(new ClientHandler(connectionSocket)).start();
-        //serverSocket.close();
-        //break;
+            System.out.println("[LISTENING] Server is listening...");
+            Socket connectionSocket = serverSocket.accept(); 
+            
+            ClientHandler cl = new ClientHandler(connectionSocket);
+            Thread t = new Thread(cl);
+            t.start();
+            //System.out.println(t.activeCount());
+            //try {t.join(); } catch(Exception e) {System.out.println(e.getMessage());}
+            if(cl.getVal()==1) break;
         }
+        serverSocket.close();
     }
 
     static class ClientHandler implements Runnable {
@@ -29,6 +34,7 @@ public class Server {
         PrintWriter outToClient;
         String guestPrefix;
         String adminPrefix;
+        int val;
         
         ClientHandler(Socket connectionSocket) throws IOException {
             this.connectionSocket = connectionSocket;
@@ -56,13 +62,15 @@ public class Server {
             outToClient.println(s);
             outToClient.flush();
         }
+
+        int getVal() { return val;}
     
-        void handleClientThread() {
+        int handleClientThread() {
             while(true) {
                 try {
                     String s[] = recvFromClient();
                     if(s[0].equals("q")) {
-                        break;
+                        return 1;
                     }
                     if(s[0].equals("admin")) {
                         handleadmin();
@@ -74,10 +82,11 @@ public class Server {
                     break;
                 }
             }
+            return 0;
         }
     
         public void run() {
-            handleClientThread();
+            val = handleClientThread();
         }
     
         String handleClient(String s[]) throws IOException{
