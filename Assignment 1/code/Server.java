@@ -97,6 +97,7 @@ public class Server {
             else {
                 for(int i = 0; i < s.length; i++) {
                     if(s[i].equals("put")) {
+                        //System.out.println("putted");
                         map.put(s[i+1], s[i+2]);
                         data.put(connectionSocket.getPort() + "", new HashMap<>(map));
                     }

@@ -57,6 +57,7 @@ public class Client {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         // diplays all get output comma separated
+        if(recvString.equals("")) return;
         if(recvString.charAt(recvString.length()-1) == ',') {
             String output[] = recvString.split(",");
             for(int i = 0; i < output.length; i++) {
