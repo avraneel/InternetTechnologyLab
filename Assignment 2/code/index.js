@@ -1,9 +1,9 @@
 const express = require('express');
 const multer = require('multer');
 const app = express();
-const port = 5500;
+const port = 8000;
 
-app.use(express.urlencoded)
+//app.use(express.urlencoded)
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}!`);
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     res.send("Welcome to server");
 });
 
-app.post('/index.js', upload.single('img'), (req, res) => {
+app.post('/', upload.single('img'), (req, res) => {
     console.log(req.body)
     res.send('POST request to homepage');   
 });
