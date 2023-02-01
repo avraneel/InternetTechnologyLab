@@ -9,12 +9,13 @@ app.listen(port, () => {
     console.log(`Server listening on port ${port}!`);
 });
 
-const fileStorageEngine = multer.diskStorage({
+// We specify where the file should be stored and in what format
+const fileStorageEngine = multer.diskStorage({      // constructor requires an object
     destination: (req, file, cb) => {
-        cb(null, './img')
+        cb(null, './img')   // where the file should be stored
     },
     filename: (req, file, cb) => {
-        cb(null, file.filename + "_" + Date.now() + ".jpg")
+        cb(null, file.filename + "_" + Date.now() + ".jpg") // what format
     }
 });
 
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', upload.single('img'), (req, res) => {
-    console.log(req.body)
+    console.log(req.body.img)
     res.send('POST request to homepage');   
 });
 
