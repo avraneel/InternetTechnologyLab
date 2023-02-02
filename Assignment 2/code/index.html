@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html>
     <head>
         <meta charset="utf-8">
-        <title>Upload Client</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Other</title>
+        <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
+        <h1>
+            Assignment 2: Image Upload
+        </h1>
         
-        <h1>Upload Client</h1>
+        <ul>
+            <li>
+                <a href="http://127.0.0.1:8000/upload.html">Go to Upload page</a>
+            </li>
+            <li>
+                <a href="http://127.0.0.1:8000/download.html">Go to Download page</a>
+            </li>
+            <li>
+                <a href="http://127.0.0.1:8000/view.html">Go to view page</a>
+            </li>
+        </ul>
 
-        <div>
-            <form method="post" action="http://127.0.0.1:8000/" enctype="multipart/form-data">  <!--encypte is imp!!!-->
-                <label>Please enter your name
-                    <input type="text" name="text">
-                </label>
-                <label>Please upload image:
-                    <input type="file" name="img">
-                </label>
-                <input type="submit" value="upload">
-            </form>
-        </div>
     </body>
 </html>

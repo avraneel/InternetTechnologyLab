@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Upload Client</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        
+        <h1>Upload Client</h1>
+
+        <div>
+            <form method="post" action="http://127.0.0.1:8000/upload" enctype="multipart/form-data">  
+                <!--encypte is imp!!!-->
+                <label>Enter your name. This will be used to identify you: 
+                    <input type="text" name="name">
+                </label>
+                <br>
+                <label>Please enter any text:
+                    <input type="text" name="text">
+                </label>
+                <br>
+                <label>Please upload image:
+                    <input type="file" name="img">
+                </label>
+                <br>
+                <input type="submit" value="Upload data">
+            </form>
+        </div>
+
+    </body>
+
+</html>
