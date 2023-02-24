@@ -1,5 +1,5 @@
 form {
-    background-color: blueviolet;
+    
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -8,7 +8,43 @@ form {
     padding: 0px;
 }
 
+#myimgup {
+    border: 5px solid black;
+    padding: 5px;
+    text-align: center;
+    background-color: white;
+}
+
+#imgup {
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    width: 0%;
+}
+
 #msgbox {
     margin: 10px;
     width: 100%;
 }
+
+ul {
+    list-style-type: none;
+}
+
+
+#messages {
+    list-style-type: none;
+}
+
+#connectprompt {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: whitesmoke;
+    background-color: green;
+}
+
+#disconnectprompt {
+    text-align: center;
+    background-color: orangered;
+}
+
