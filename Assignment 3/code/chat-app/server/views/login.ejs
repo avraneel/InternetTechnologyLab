@@ -7,26 +7,34 @@
 		
         <div class="loginform">
             <h1>Welcome Back!</h1>
-            <form action="">
-                <label id="useralabel">
+            <form>
+                <label id="useralabel" for="username">
                     <div id="userlabel">
                         Username:<br>
                     </div> 
-                    <input type="text" id="userfield">
+                    <input type="text" id="userfield" name="email" required>
                 </label>
                 <br>
                 <br>
                 <label>
-                    <div id="passlabel">
+                    <div id="passlabel" for="password">
                         Password:<br>
                     </div>
-                    <input type="password" id="passfield">
+                    <input type="password" id="passfield" name="password" required>
                 </label>
-                <br>
-                <br>
+                <br><br>
                 <input type="submit" id="submit" value="Hop back in">
             </form>
         </div>
-        <script src="" async defer></script>
+
+        <script src="" async defer>
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const email = form.username;
+                const password = form.password.value;
+            }) 
+        </script>
     </body>
 </html>

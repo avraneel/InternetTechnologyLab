@@ -48,3 +48,8 @@ h1 {
     padding-left: 0px;
     padding-bottom: 7px;
 }
+
+.password.error {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: red;
+}

@@ -12,21 +12,54 @@
                     <div id="userlabel">
                         Username:
                     </div>
-                    <input type="text" id="userfield">
+                    <input type="text" id="userfield" name="username">
                 </label>
+                <div class="email error"></div>
                 <br>
                 <br>
                 <label>
                     <div id="passlabel">
                         Password:
                     </div>
-                    <input type="password" id="passfield">
+                    <input type="password" id="passfield" name="password">
                 </label>
+                <div class="password error"></div>
                 <br>
                 <br>
-                <input type="submit" id="submit" value="Join the Conversation">
+                <input type="submit" id="submit" value="Join the Conversation" name="submit">
             </form>
         </div>
-        <script src="" async defer></script>
+        <script>
+
+            const form = document.querySelector("form");
+            const passError = document.querySelector('.password.error');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const username = form.username.value;
+                const password = form.password.value;
+
+                try {
+                    const res = await fetch('/signup', {
+                        method: 'POST',
+                        body: JSON.stringify({ username, password}),
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await res.json();
+                    console.log(data.password);
+                    if(data.password != null) {
+                        passError.textContent = data.password;
+                        //passError.textContent = "lol";
+
+                    } 
+                    
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            });
+
+        </script>
     </body>
 </html>
