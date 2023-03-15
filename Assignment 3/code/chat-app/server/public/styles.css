@@ -1,11 +1,11 @@
 form {
-    
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     position: fixed;
     left: 0; right: 0; bottom: 0;
     padding: 0px;
+    background-color: plum;
 }
 
 #myimgup {

@@ -1,65 +1,70 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-<%- include('./partial/head.ejs') %>
-<title>Signup</title>
-<link rel="stylesheet" href="styles/signup.css">
-</head>
-<body>
-		
-        <div class="loginform">
-            <h1>A World of Communication awaits you</h1>
-            <form>
-                <label>
-                    <div id="userlabel">
-                        Username:
-                    </div>
-                    <input type="text" id="userfield" name="username">
-                </label>
-                <div class="email error"></div>
-                <br>
-                <br>
-                <label>
-                    <div id="passlabel">
-                        Password:
-                    </div>
-                    <input type="password" id="passfield" name="password">
-                </label>
-                <div class="password error"></div>
-                <br>
-                <br>
-                <input type="submit" id="submit" value="Join the Conversation" name="submit">
-            </form>
-        </div>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Signup</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <h1>Signup</h1>
+        <form>
+            <label>Username<br>
+                <input type="text" name="username">    
+            </label>
+            <br>
+            <br>
+            <label>Password<br>
+                <input type="password" name="password">
+            </label>
+            <div class="passerror"></div>
+            <br>
+            <br>
+            <input type="submit" value="Sign Up">
+        </form>
         <script>
+            const form = document.querySelector('form');
 
-            const form = document.querySelector("form");
-            const passError = document.querySelector('.password.error');
-
-            form.addEventListener('submit', async (e) => {
+            form.addEventListener('submit' , async (e) => {
                 e.preventDefault();
 
                 const username = form.username.value;
                 const password = form.password.value;
 
+                const passError = document.querySelector(".passerror")
+
+                passError.textContent = ''
+
                 try {
                     const res = await fetch('/signup', {
                         method: 'POST',
-                        body: JSON.stringify({ username, password}),
-                        headers: { 'Content-Type': 'application/json' }
+                        body: JSON.stringify({ username, password }),
+                        headers: { 'Content-Type' : 'application/json' }
                     });
                     const data = await res.json();
-                    console.log(data.password);
+                    console.log(data)
                     if(data.password != null) {
-                        passError.textContent = data.password;
-                        //passError.textContent = "lol";
+                        //console.log('i am here')
+                        passError.textContent = data.password
+                    }
+                    else {
+                        location.assign('/public')
+                    }
+                }
+                catch(err) {
+                    console.log(err)
+                }
 
-                    } 
-                    
-                }
-                catch (err) {
-                    console.log(err);
-                }
             });
-
         </script>
     </body>
 </html>

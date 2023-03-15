@@ -3,8 +3,9 @@ const http = require('http');
 const mongoose = require('mongoose');
 const cookieparser = require('cookie-parser');
 const bcrpyt = require('bcrypt');
-const User = require('./models/User');
 const session = require('express-session');
+const User = require('./models/User')
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -13,7 +14,6 @@ const {Server} = require('socket.io');
 const io = new Server(server);
 
 mongoose.set('strictQuery', false);
-const authRoutes = require('./routes/auth');
 app.set('view engine', 'ejs');
 
 app.use(express.static(__dirname+'/public'));
@@ -25,23 +25,25 @@ mongoose.connect("mongodb://127.0.0.1:27017/ChatApp", {
   useUnifiedTopology: true
 });
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/login', async (req, res) => {
+/*app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if(!user) {
-    return res.status(401).send('Invalid email or password');
+    res.status(401).send('Invalid email or password');
   }
   //const validPassword = await bcrypt
-})
+})*/
 
 
 io.on('connection', (socket) => {
   console.log('a user connected');
   io.emit('connect message');
+
+  // Connection me
 
   socket.on('chat message', (msg) => {
     console.log(msg);
