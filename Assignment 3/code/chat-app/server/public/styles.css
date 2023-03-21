@@ -38,6 +38,13 @@ ul {
     width: 100%;
     padding: 5px;
     background-color: #8508b2;
+    display: flex;
+    flex-direction: row;
+}
+
+#uname {
+    color: whitesmoke;
+    left: 50;
 }
 
 #messages {
@@ -53,6 +60,8 @@ ul {
 
 #disconnectprompt {
     text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: whitesmoke;
     background-color: orangered;
 }
 

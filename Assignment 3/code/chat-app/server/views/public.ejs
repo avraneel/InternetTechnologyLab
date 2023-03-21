@@ -11,9 +11,12 @@
 
     <body>
         <div id="navbar">
+            
             <form action="http://127.0.0.1:3000/logout">
+                
                 <button>Logout</button>
             </form>
+            <div id="uname"><%= username %></div>
         </div>
         <ul id="messages"></ul>
 
@@ -46,21 +49,20 @@
                 }
             });
 
-
-            socket.on('connect message', (user) => {
+            socket.on('connect message', (users) => {
                 var item = document.createElement('li');
-                //users[soc] = un;
-                item.textContent = "User " + user.sid + "/" + user.nam + " connected";
+                
+                item.textContent = "User " + users + " connected";
                 item.setAttribute("id", "connectprompt");
                 messages.appendChild(item);
             })
 
-            socket.on('chat message', (msg) => {
+            socket.on('chat message', (msgobj) => {
                 var item = document.createElement('li');
                 var us = document.createElement('b');
-                us.textContent = socket.id;
+                us.textContent = msgobj.username;
                 var msgtext = document.createElement('p');
-                msgtext.textContent = msg;
+                msgtext.textContent = msgobj.msg;
                 item.appendChild(us);
                 item.appendChild(msgtext);
                 item.setAttribute("id", "message");
@@ -78,9 +80,9 @@
                 window.scrollTo(0, document.body.scrollHeight);
             });
 
-            socket.on('disconnect message', () => {
+            socket.on('disconnect message', (user) => {
                 var item = document.createElement('li');
-                item.textContent = "User disconnected";
+                item.textContent = "User " + user + " disconnected";
                 item.setAttribute("id", "disconnectprompt");
                 messages.appendChild(item);
                 window.scrollTo(0, document.body.scrollHeight);

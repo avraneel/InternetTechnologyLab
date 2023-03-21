@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { use } = require('../routes/auth');
+const UserSocket = require('../models/UserSocket');
 
 const maxAge = 24*60*60;
 
@@ -12,9 +13,15 @@ const createToken = (id) => {
     })
 }
 
-module.exports.public_get = (req, res, next) => {
-    const token = req.cookies.jwt;
+let un = ""
+
+function getToken() {
     
+}
+
+module.exports.public_get = function render_public(req, res, next) {
+    const token = req.cookies.jwt;
+    un = "lol"
     jwt.verify(token, 'sample', (err, decodedToken) => { // verify token
         if(err) {
             console.log(err)
@@ -24,11 +31,14 @@ module.exports.public_get = (req, res, next) => {
             id = decodedToken.id;
             User.findById(id, (err, user) => {
                 if(err) return;
+                un = user.username;
+                const filter = { username: un};
+                const update = { sid: socket.id};
                 res.render('public',{ username: user.username });               
             });
         }
-    } )
-
+    } );
+    return un;
    
 }
 
@@ -44,7 +54,7 @@ module.exports.signup_post = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = await User.create({ username, password });
+        const user = await User.create({ username, password, sid: "" });
         const token = createToken(user._id);
         res.cookie('jwt', token, {
             httpOnly: true,
@@ -68,29 +78,25 @@ module.exports.signup_post = async (req, res) => {
     }
 }
 
-module.exports.login_post = async (req, res) => {
+module.exports.login_post = async function loginpost(req, res) {
     const { username, password } = req.body;
     try {
+        const us = await UserSocket.create({socketId: "", userId: username});
         const user = await User.login(username, password);
+        
         const token = createToken(user._id);
         res.cookie('jwt', token, {
             httpOnly: true,
             maxAge: maxAge*1000
         });
-        var onl = {username: username, status: "online"};
-        online.push(onl);
-        var json = JSON.stringify(online);
-        console.log(json);
-        const fs = require('fs');
-        fs.writeFile('./on.json', json, (err)=>{
-
-        });
+        un = username
         res.json({ user: user._id, username: username });
     }
     catch (err) {
         console.log(err)
         res.status(400).send({ msg: 'Incorrect username or password '});
     }
+    //return username;
 }
 
 module.exports.logout_get = (req, res) => {
@@ -99,6 +105,20 @@ module.exports.logout_get = (req, res) => {
 }
 
 module.exports.home_get = (req, res) => {
-    res.render('home')
+    const token = req.cookies.jwt;
+    
+    jwt.verify(token, 'sample', (err, decodedToken) => { // verify token
+        if(err) {
+            console.log(err)
+            res.redirect('/login');
+        }
+        else {
+            id = decodedToken.id;
+            User.findById(id, (err, user) => {
+                if(err) return;
+                res.render('home',{ username: user.username });               
+            });
+        }
+    } );
+    //return username;
 }
-
