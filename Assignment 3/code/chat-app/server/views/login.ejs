@@ -6,23 +6,25 @@
         <title>Login</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="styles/login.css">
     </head>
     <body>
-        <h1>Login</h1>
-        <form>
-            <label>Username<br>
-                <input type="text" name="username">    
-            </label>
-            <br>
-            <br>
-            <label>Password<br>
-                <input type="password" name="password">
-            </label>
-            <div class="passerror"></div>
-            <br>
-            <input type="submit">
-        </form>
+        <div class="container">
+            <h1>Login</h1>
+            <form action="/home" method="post">
+                <label>Username<br><br>
+                    <input type="text" name="username">    
+                </label>
+                <br>
+                <br>
+                <label>Password<br><br>
+                    <input type="password" name="password">
+                </label>
+                <div class="passerror"></div>
+                <br>
+                <input type="submit" id="submit" value="Hop back in">
+            </form>
+        </div>
         <script>
             const form = document.querySelector('form');
 
@@ -48,7 +50,8 @@
                         passError.textContent = data.msg
                     }
                     if(data.user) {
-                        location.assign('/public')
+                        localStorage.setItem('username', data.username)
+                        location.assign('/home')
                         console.log("Logged in")
                     }
                 }

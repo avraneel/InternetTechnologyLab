@@ -10,10 +10,13 @@
     </head>
 
     <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+        <div id="navbar">
+            <form action="http://127.0.0.1:3000/logout">
+                <button>Logout</button>
+            </form>
+        </div>
         <ul id="messages"></ul>
+
         <form id="form">
                 <textarea placeholder="enter message" id="msgbox"></textarea>
                 <label for="imgup" id="myimgup">Upload<br>image</label>
@@ -25,9 +28,11 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var socket = io();
-
+            const users = []
             var input = document.getElementById('msgbox');
             var inputimg = document.getElementById('imgup');
+            const un = <%- JSON.stringify(username) %>
+            console.log()
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -36,21 +41,38 @@
                   input.value = '';
                 }
                 else if (inputimg.value) {
-                    socket.emit('chat message', input.value);
+                    socket.emit('chat img message', input.value);
                     input.img = ''
                 }
             });
 
-            socket.on('connect message', () => {
+
+            socket.on('connect message', (user) => {
                 var item = document.createElement('li');
-                item.textContent = "User connected";
+                //users[soc] = un;
+                item.textContent = "User " + user.sid + "/" + user.nam + " connected";
                 item.setAttribute("id", "connectprompt");
                 messages.appendChild(item);
             })
 
             socket.on('chat message', (msg) => {
                 var item = document.createElement('li');
-                item.textContent = msg;
+                var us = document.createElement('b');
+                us.textContent = socket.id;
+                var msgtext = document.createElement('p');
+                msgtext.textContent = msg;
+                item.appendChild(us);
+                item.appendChild(msgtext);
+                item.setAttribute("id", "message");
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            socket.on('chat img message', (msg) => {
+                var item = document.createElement('li');
+                var imgitem = document.createElement('img');
+                item.appendChild(imgitem);
+                img.src = 'public/img/';
                 item.setAttribute("id", "message");
                 messages.appendChild(item);
                 window.scrollTo(0, document.body.scrollHeight);
@@ -58,7 +80,7 @@
 
             socket.on('disconnect message', () => {
                 var item = document.createElement('li');
-                item.textContent = "User has disconnected";
+                item.textContent = "User disconnected";
                 item.setAttribute("id", "disconnectprompt");
                 messages.appendChild(item);
                 window.scrollTo(0, document.body.scrollHeight);

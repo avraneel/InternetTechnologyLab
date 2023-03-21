@@ -1,9 +1,10 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { use } = require('../routes/auth');
-// handle errors
 
 const maxAge = 24*60*60;
+
+const online=[];
 
 const createToken = (id) => {
     return jwt.sign({ id }, 'sample', {
@@ -11,8 +12,24 @@ const createToken = (id) => {
     })
 }
 
-module.exports.public_get = (req, res) => {
-    res.render('public');
+module.exports.public_get = (req, res, next) => {
+    const token = req.cookies.jwt;
+    
+    jwt.verify(token, 'sample', (err, decodedToken) => { // verify token
+        if(err) {
+            console.log(err)
+            res.redirect('/login');
+        }
+        else {
+            id = decodedToken.id;
+            User.findById(id, (err, user) => {
+                if(err) return;
+                res.render('public',{ username: user.username });               
+            });
+        }
+    } )
+
+   
 }
 
 module.exports.signup_get = (req, res) => {
@@ -33,16 +50,22 @@ module.exports.signup_post = async (req, res) => {
             httpOnly: true,
             maxAge: maxAge*1000
         });
-        res.status(201).json({ user: user._id });
+        var onl = {username: username, status: "online"};
+        online.push(onl);
+        var json = JSON.stringify(online);
+        console.log(json);
+        const fs = require('fs');
+        fs.writeFile('./on.json', json, (err)=>{
+
+        });
+        res.status(201).json({ user: user._id, username: username });
+        online.push(username);
     } 
     catch(err) {
-        //console.log("Error is: " + err);
+        console.log(err);
         const errors = { password: 'Min password length is 6'};
         res.status(400).send(errors);
     }
-    console.log(username);
-    console.log(password);
-    // res.send('new signup');
 }
 
 module.exports.login_post = async (req, res) => {
@@ -54,11 +77,28 @@ module.exports.login_post = async (req, res) => {
             httpOnly: true,
             maxAge: maxAge*1000
         });
-        res.status(200).json({ user: user._id })
+        var onl = {username: username, status: "online"};
+        online.push(onl);
+        var json = JSON.stringify(online);
+        console.log(json);
+        const fs = require('fs');
+        fs.writeFile('./on.json', json, (err)=>{
+
+        });
+        res.json({ user: user._id, username: username });
     }
     catch (err) {
         console.log(err)
         res.status(400).send({ msg: 'Incorrect username or password '});
     }
-    // res.send('new login');
 }
+
+module.exports.logout_get = (req, res) => {
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.redirect('/')
+}
+
+module.exports.home_get = (req, res) => {
+    res.render('home')
+}
+

@@ -5,14 +5,19 @@ const requireAuth = (req, res, next) => {
 
     // check if jwt exists and is valid
     if(token) {
-        jwt.verify(token, 'sample', (err, decodedToken) => {
+        jwt.verify(token, 'sample', (err, decodedToken) => { // verify token
             if(err) {
-                res.redirect('/login')
+                console.log(err)
+                res.redirect('/login');
+            }
+            else {
+                next();
             }
         } )
     }
-    else {
+    else { // Token does not exist
         res.redirect('/login')
     }
-
 }
+
+module.exports = { requireAuth };

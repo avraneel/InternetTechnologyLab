@@ -28,7 +28,7 @@ userSchema.post('save', (doc, next) => {
 })
 
 userSchema.statics.login = async function(username, password) {
-    const user = await this.findOne({ username });
+    const user = await this.findOne({ username });  // finds particular id
     if (user) {
         const auth = await bcrypt.compare(password, user.password);
         if(auth) {

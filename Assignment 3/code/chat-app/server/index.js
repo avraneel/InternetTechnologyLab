@@ -6,6 +6,7 @@ const bcrpyt = require('bcrypt');
 const session = require('express-session');
 const User = require('./models/User')
 const authRoutes = require('./routes/auth');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -25,30 +26,34 @@ mongoose.connect("mongodb://127.0.0.1:27017/ChatApp", {
   useUnifiedTopology: true
 });
 
-/*app.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-/*app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if(!user) {
-    res.status(401).send('Invalid email or password');
-  }
-  //const validPassword = await bcrypt
-})*/
+const onlineUsers = [];
 
+var token = ""
 
 io.on('connection', (socket) => {
+  
   console.log('a user connected');
-  io.emit('connect message');
-
+  nam = ""
+  console.log("soc " + socket.id)
+  io.emit('connect message', { sid: socket.id, uid: nam });
   // Connection me
+  
+
+  //console.log(socket.handshake.query.onlineUsers);
 
   socket.on('chat message', (msg) => {
     console.log(msg);
     io.emit('chat message', msg);
   });
+
+  socket.on('chat img message', (msg) => {
+    console.log(msg);
+    io.emit('chat message', msg);
+  })
 
   socket.on('disconnect', () => {
     console.log('user disconnected');

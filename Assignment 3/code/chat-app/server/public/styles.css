@@ -1,4 +1,4 @@
-form {
+#form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -31,6 +31,14 @@ ul {
     list-style-type: none;
 }
 
+#navbar {
+    position: sticky;
+    top:0;
+    left:0;
+    width: 100%;
+    padding: 5px;
+    background-color: #8508b2;
+}
 
 #messages {
     list-style-type: none;
