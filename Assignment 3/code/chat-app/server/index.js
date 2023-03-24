@@ -3,8 +3,9 @@ const http = require('http');
 const mongoose = require('mongoose');
 const cookieparser = require('cookie-parser');
 const bcrpyt = require('bcrypt');
-const User = require('./models/User')
+const User = require('./models/User');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 
@@ -94,6 +95,7 @@ app.post('/signup', async (req, res) => {
           httpOnly: true,
           maxAge: maxAge*1000
       });
+      un = username;
       res.status(201).json({ user: user._id, username: username });
   } 
   catch(err) {
@@ -102,8 +104,6 @@ app.post('/signup', async (req, res) => {
       res.status(400).send(errors);
   }
 })
-
-
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -140,12 +140,12 @@ io.on('connection', (socket) => {
 
   socket.on('chat message', (msg) => {
     console.log(msg);
-    io.emit('chat message', { msg: msg, username: users[socket.id] });
+    io.emit('chat message', { msg: msg, username: users[socket.id] + " sent a message" });
   });
 
   socket.on('chat img message', (msg) => {
     console.log(msg);
-    io.emit('chat message', msg);
+    io.emit('chat img message', {url: msg, username: users[socket.id] + " sent an image"});
   })
   uname = users[socket.id]
   socket.on('disconnect', () => {

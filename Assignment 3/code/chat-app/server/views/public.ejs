@@ -22,37 +22,61 @@
 
         <form id="form">
                 <textarea placeholder="enter message" id="msgbox"></textarea>
-                <label for="imgup" id="myimgup">Upload<br>image</label>
-                    <input  type="file" id="imgup" accept="image">
-                
-                
+                <label id="myimgup">Upload image
+                    <input  type="file" id="imgup">
+                </label> 
                 <button type="submit">Send<br>message</button>
         </form>
         <script src="/socket.io/socket.io.js"></script>
         <script>
+            //import {Cloudinary} from '@cloudinary/url-gen'
+            //import {Resize} from '@cloudinary/url-gen/actions'
+
+            //const cldInstance = new Cloudinary({cloud: {cloudName: 'dzdlplwhi'}});
+
             var socket = io();
             const users = []
             var input = document.getElementById('msgbox');
             var inputimg = document.getElementById('imgup');
+            const reader = new FileReader();
             const un = <%- JSON.stringify(username) %>
-            console.log()
+            
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
+                //console.log(inputimg[0]);
+                const imgfile = inputimg.files[0];
+                console.log(imgfile);
+
+                // Upload imagfile to cloudinary
+                if(imgfile) {
+                    const formData = new FormData();
+                    formData.append('file', imgfile);
+                    formData.append('upload_preset', 'xmlqidin');
+                    fetch('https://api.cloudinary.com/v1_1/dzdlplwhi/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        //console.log("lol " + data.url);
+                        socket.emit('chat img message', data.url);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })  
+                }
+
                 if (input.value) {
                   socket.emit('chat message', input.value);
                   input.value = '';
-                }
-                else if (inputimg.value) {
-                    socket.emit('chat img message', input.value);
-                    input.img = ''
                 }
             });
 
             socket.on('connect message', (users) => {
                 var item = document.createElement('li');
-                
-                item.textContent = "User " + users + " connected";
+                item.textContent = users + " has joined the chat";
                 item.setAttribute("id", "connectprompt");
                 messages.appendChild(item);
             })
@@ -71,10 +95,18 @@
             });
 
             socket.on('chat img message', (msg) => {
+                var imgcontainer = document.createElement('div');
                 var item = document.createElement('li');
+                item.class = "imgmsg";
+                var us = document.createElement('b');
+                us.textContent = msg.username;
                 var imgitem = document.createElement('img');
-                item.appendChild(imgitem);
-                img.src = 'public/img/';
+                imgitem.src = msg.url;
+                //console.log("Img link: " + msg.url)
+                //console.log("Img link: " + imgitem.src);
+                imgcontainer.appendChild(imgitem);
+                item.appendChild(us);
+                item.appendChild(imgcontainer);
                 item.setAttribute("id", "message");
                 messages.appendChild(item);
                 window.scrollTo(0, document.body.scrollHeight);
@@ -82,7 +114,7 @@
 
             socket.on('disconnect message', (user) => {
                 var item = document.createElement('li');
-                item.textContent = "User " + user + " disconnected";
+                item.textContent = user + " has left the chat";
                 item.setAttribute("id", "disconnectprompt");
                 messages.appendChild(item);
                 window.scrollTo(0, document.body.scrollHeight);
