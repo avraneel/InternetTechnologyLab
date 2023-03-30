@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Chat app</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <ul id="messages"></ul>
+        <form id="form">
+                <textarea placeholder="enter message" id="msgbox"></textarea>
+                <label for="imgup" id="myimgup">Upload<br>image</label>
+                    <input  type="file" id="imgup" accept="image">
+                
+                
+                <button type="submit">Send<br>message</button>
+        </form>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io();
+
+            var input = document.getElementById('msgbox');
+            var inputimg = document.getElementById('imgup');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (input.value) {
+                  socket.emit('chat message', input.value);
+                  input.value = '';
+                }
+                else if (inputimg.value) {
+                    socket.emit('chat message', input.value);
+                    input.img = ''
+                }
+            });
+
+            socket.on('connect message', () => {
+                var item = document.createElement('li');
+                item.textContent = "User connected";
+                item.setAttribute("id", "connectprompt");
+                messages.appendChild(item);
+            })
+
+            socket.on('chat message', (msg) => {
+                var item = document.createElement('li');
+                item.textContent = msg;
+                item.setAttribute("id", "message");
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            socket.on('disconnect message', () => {
+                var item = document.createElement('li');
+                item.textContent = "User has disconnected";
+                item.setAttribute("id", "disconnectprompt");
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+        </script>
+    </body>
+</html>

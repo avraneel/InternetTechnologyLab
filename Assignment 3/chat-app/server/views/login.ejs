@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Login</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles/signup.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Login</h1>
+            <form action="/home" method="post">
+                <label>Username<br><br>
+                    <input type="text" name="username">    
+                </label>
+                <br>
+                <br>
+                <label>Password<br><br>
+                    <input type="password" name="password">
+                </label>
+                <div class="passerror"></div>
+                <br>
+                <input type="submit" id="submit" value="Hop back in">
+            </form>
+        </div>
+        <script>
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit' , async (e) => {
+                e.preventDefault();
+
+                const username = form.username.value;
+                const password = form.password.value;
+
+                const passError = document.querySelector(".passerror")
+
+                passError.textContent = ''
+
+                try {
+                    const res = await fetch('/login', {
+                        method: 'POST',
+                        body: JSON.stringify({ username, password }),
+                        headers: { 'Content-Type' : 'application/json' }
+                    });
+                    const data = await res.json();
+                    console.log(data)
+                    if(data.msg != null) {
+                        passError.textContent = data.msg
+                    }
+                    if(data.user) {
+                        localStorage.setItem('username', data.username)
+                        location.assign('/home')
+                        console.log("Logged in")
+                    }
+                }
+                catch(err) {
+                    console.log({})
+                }
+
+            });
+        </script>
+    </body>
+</html>
